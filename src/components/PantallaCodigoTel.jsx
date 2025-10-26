@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import logo from "../assets/logo-whatsapp.png";
 import logotel from "../assets/logo-pc-tel-whatsapp.jpg";
 import ajustes from "../assets/ajustes.png";
-import logomenu from "../assets/menu-logo.png";
+import logomenu from "../assets/menu-logo.PNG";
 import "./PantallaCodigoTel.css";
 
 function PantallaCodigoTel() {
@@ -16,7 +16,7 @@ function PantallaCodigoTel() {
   const [codigoGuardado, setCodigoGuardado] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Cargar el código que Twilio envió
+  
   useEffect(() => {
     const codigo = localStorage.getItem("codigoTemporal");
     if (codigo) setCodigoGuardado(codigo);
