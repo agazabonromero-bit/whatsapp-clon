@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import Tooltip from '../components/Tooltip';
 import logo from "../assets/logo-whatsapp.png"
 import logotel from "../assets/logo-pc-tel-whatsapp.jpg"
-import ajustes from "../assets/Ajustes.png"
+import ajustes from "../assets/ajustes.png"
 import logomenu from "../assets/menu-logo.png"
 
 function PantallaLogueo() {
