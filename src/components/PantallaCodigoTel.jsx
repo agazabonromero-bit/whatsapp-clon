@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import logo from "../assets/logo-whatsapp.png"
-import logotel from "../assets/logo-pc-tel-whatsapp.jpg"
-import ajustes from "../assets/ajustes.png"
-import logomenu from "../assets/menu-logo.png"
+import logo from "../assets/logo-whatsapp.png";
+import logotel from "../assets/logo-pc-tel-whatsapp.jpg";
+import ajustes from "../assets/ajustes.png";
+import logomenu from "../assets/menu-logo.png";
 import "./PantallaCodigoTel.css";
 
 function PantallaCodigoTel() {
