@@ -1,0 +1,247 @@
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 15px 20px;
+    top: 10px;
+    left: 10px;
+    background-color: #ffffff;
+    z-index: 1000;
+
+}
+
+.logo-whatsapp {
+    width: 60px;
+    height: 60px;
+    margin-right: 8px;
+}
+
+.text-whatsapp {
+    font-size: 25px;
+    font-weight: bold;
+    color: #25d366;
+    font-family: Arial, sans-serif;
+}
+
+.caja-descarga {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #ffffff;
+    border: 1px solid #111b21;
+    border-radius: 50px;
+    padding: 12px 20px;
+    margin: 20px auto;
+    max-width: 925px;
+    height: 115px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.caja-logo {
+    width: 125px;
+    height: 90px;
+    margin-right: 35px;
+    border-radius: 10px;
+}
+
+.caja-textos {
+    flex: 1;
+    margin: 0 20px;
+}
+
+.caja-texto {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #111b21;
+}
+
+.parrafo {
+    margin: 4px 0 0 0;
+    font-size: 15px;
+    color: #111b21;
+    line-height: 1.4;
+
+}
+
+.caja-boton {
+    background-color: #25d366;
+    font-size: 20px;
+    color: #111b21;
+    border: 1px solid black;
+    border-radius: 30px;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.arrow-down {
+    font-weight: 100;
+
+}
+
+.caja-boton:hover {
+    background-color: #111b21;
+    color: #ddd;
+}
+
+.codigo-container {
+    background-color: #ffffff;
+    border: 1px solid #111b21;
+    border-radius: 50px;
+    max-width: 880px;
+    height: 405px;
+    margin: 40px auto;
+    padding: 40px 50px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.codigo-titulo {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.codigo-subtitulo {
+    font-size: 14px;
+    color: #111b21;
+    margin-bottom: 30px;
+    
+}
+
+.codigo-numero {
+    color: #111b21;
+    font-weight: 600;
+}
+.editar-number{
+    color: #008069;
+}
+
+.codigo-inputs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+}
+
+.codigo-input {
+    width: 45px;
+    height: 55px;
+    font-size: 22px;
+    text-align: center;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f6f6f6;
+    outline: none;
+    transition: all 0.2s ease-in-out;
+}
+
+.codigo-input:focus {
+    border-color: #25d366;
+    background-color: #fff;
+}
+
+.codigo-pasos {
+    text-align: left;
+    margin: 20px 0;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.codigo-pasos ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.codigo-pasos ul li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 20px;
+}
+
+.codigo-pasos ul li::before {
+    content: "";
+    width: 28px;
+    height: 28px;
+    border: 2px solid #111b21;
+    border-radius: 50%;
+    position: absolute;
+    left: 10px;    
+    top: 5px;
+    z-index: 1;
+    content: counter(step);
+    counter-increment: step;
+    
+}
+
+.codigo-pasos ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: step;
+}
+
+.codigo-pasos ul li {
+    position: relative;
+    margin: 20px 0;
+    padding-left: 40px;
+    font-size: 15px;
+    color: #111b21;
+}
+
+.codigo-pasos ul li::before {
+    
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 24px;
+    height: 24px;
+    border: 2px solid #111b21;
+    border-radius: 50%;
+    background: white;
+    color: #111b21;
+    font-size: 13px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.codigo-pasos ul li::after {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 24px;
+    width: 2px;
+    height: calc(100% - 24px);
+    background: #25d366;
+}
+
+
+.codigo-pasos ul li:last-child::after {
+    display: none;
+}
+
+.codigo-link {
+    color: #111b21;
+    text-decoration: none;
+    font-weight: 500;
+    text-align: left;
+    display: block;
+}
+
+.codigo-link:hover {
+    text-decoration: underline;
+    text-decoration-color: #25d366;
+    color: #25d366;
+}
+
+.whatsapp-icon {
+    font-size: 16px;
+}
+.editar-number{
+    font-weight: bold;
+}

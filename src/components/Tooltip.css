@@ -1,0 +1,30 @@
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  position: absolute;
+  bottom: 140%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #111b21;
+  color: #ffffff;
+  font-size: 12.5px;
+  line-height: 1.45;
+  padding: 10px 12px;
+  border-radius: 4px; /* 👈 cuadrado pero con un leve redondeado */
+  width: 240px; /* 👈 tamaño fijo para forzar las 4 líneas */
+  text-align: center;
+  z-index: 999;
+  opacity: 0;
+  animation: fadeIn 0.25s forwards;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.tooltip-container:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}

@@ -1,0 +1,17 @@
+﻿body, #root {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.app {
+  max-width: 1600px;   
+  margin: 0 auto;      
+  background-color: #f0f2f5; 
+  min-height: 100vh;
+}
+
+.contenido {
+  padding: 20px;
+}
