@@ -22,19 +22,19 @@ function PantallaCodigoTel() {
     if (codigo) setCodigoGuardado(codigo);
   }, []);
 
-  // Manejar cambios en los inputs
+  
   const handleChange = (index, value) => {
     if (value.length > 1) return;
     const nuevos = [...inputs];
     nuevos[index] = value.toUpperCase();
     setInputs(nuevos);
 
-    // Mover foco al siguiente input
+    
     if (value && index < 7) {
       document.getElementById(`input-${index + 1}`).focus();
     }
 
-    // Si ya llenó los 8, verificar automáticamente
+    
     const completo = nuevos.join("");
     if (completo.length === 8) {
       handleVerificar(completo);
