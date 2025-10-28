@@ -20,7 +20,10 @@ function PantallaChats() {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [activeSection, setActiveSection] = useState("chats");
-    const socket = io("https://tu-backend.vercel.app", { transports: ["websocket"] });
+    const socket = io("https://whatsapp-cloner-backend.onrender.com/", {
+        transports: ["websocket"],
+        withCredentials: true,
+    });
 
     useEffect(() => {
         socket.on("connect", () => {
