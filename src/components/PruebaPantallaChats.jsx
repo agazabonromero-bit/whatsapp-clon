@@ -1,5 +1,5 @@
 import { io } from "socket.io-client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./PruebaPantallaChats.css";
 import chaticon from "../assets/chat-icon.png";
 import estadosIcon from "../assets/estados-whatsapp.png";
@@ -20,32 +20,35 @@ function PantallaChats() {
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [activeSection, setActiveSection] = useState("chats");
-    const socket = io("https://whatsapp-cloner-backend.onrender.com/", {
-        transports: ["websocket"],
-        withCredentials: true,
-    });
+    const socket = useRef(null);
 
     useEffect(() => {
-        socket.on("connect", () => {
-            console.log("🟢 Conectado al servidor Socket.io:", socket.id);
+        socket.current = io("https://whatsapp-cloner-backend.onrender.com", {
+            transports: ["websocket"],
+            withCredentials: true,
         });
 
-        socket.on("receiveMessage", (data) => {
-            console.log("📩 Mensaje recibido:", data);
+        socket.current.on("connect", () => {
+            console.log("Conectado al servidor Socket.io:", socket.current.id);
+        });
+
+        socket.current.on("receiveMessage", (data) => {
+            console.log("Mensaje recibido:", data);
             if (selectedChat) {
-                const updatedChat = {
-                    ...selectedChat,
-                    mensajes: [...(selectedChat.mensajes || []), { texto: data.texto, tipo: "received" }],
-                };
-                setSelectedChat(updatedChat);
+                setSelectedChat((prev) => ({
+                    ...prev,
+                    mensajes: [...(prev?.mensajes || []), { texto: data.texto, tipo: "received" }],
+                }));
             }
         });
-
         return () => {
-            socket.off("connect");
-            socket.off("receiveMessage");
+            socket.current.disconnect();
         };
     }, [selectedChat]);
+
+
+
+
     useEffect(() => {
         if (activeSection === "chats") {
             fetch("https://68e32f1e8e14f4523dacb062.mockapi.io/whatsapp/api/chats")
@@ -79,29 +82,17 @@ function PantallaChats() {
     const handleSendMessage = () => {
         if (!newMessage.trim() || !selectedChat) return;
 
-        const timestamp = new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
+        const mensaje = { texto: newMessage };
+        socket.current.emit("sendMessage", mensaje);
 
-        const nuevoMensaje = {
-            texto: newMessage,
-            tipo: "sent",
-            hora: timestamp,
-        };
-
-
-        const updatedSelectedChat = {
-            ...selectedChat,
-            mensajes: [...(selectedChat.mensajes || []), nuevoMensaje],
-        };
-        setSelectedChat(updatedSelectedChat);
-
-
-        socket.emit("sendMessage", { texto: newMessage });
+        setSelectedChat((prev) => ({
+            ...prev,
+            mensajes: [...(prev?.mensajes || []), { ...mensaje, tipo: "sent" }],
+        }));
 
         setNewMessage("");
     };
+
     const renderMainContent = () => {
         switch (activeSection) {
             case "chats":
