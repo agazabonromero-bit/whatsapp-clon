@@ -1,11 +1,11 @@
-import { io } from "socket.io-client";  
+import { io } from "socket.io-client";
 
-export const socket = io(
+const URL =
   import.meta.env.MODE === "development"
     ? "http://localhost:5000"
-    : "https://whatsapp-cloner-backend.onrender.com",
-  {
-    transports: ["websocket", "polling"],
-    withCredentials: true,
-  }
-);
+    : "https://whatsapp-cloner-backend.onrender.com"; 
+
+export const socket = io(URL, {
+  transports: ["websocket", "polling"],
+  withCredentials: true,
+});
