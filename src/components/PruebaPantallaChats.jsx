@@ -1,4 +1,4 @@
-import { io } from "socket.io-client";
+import { socket } from "../socket";
 import React, { useState, useEffect, useRef } from "react";
 import "./PruebaPantallaChats.css";
 import chaticon from "../assets/chat-icon.png";
@@ -17,34 +17,31 @@ function PantallaChats() {
     const [filter, setFilter] = useState("todos");
     const [search, setSearch] = useState("");
     const [selectedChat, setSelectedChat] = useState(null);
-    const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState("");
     const [activeSection, setActiveSection] = useState("chats");
-    const socket = useRef(null);
+
 
     useEffect(() => {
-        socket.current = io("https://whatsapp-cloner-backend.onrender.com", {
-            transports: ["websocket"],
-            withCredentials: true,
+        socket.on("connect", () => {
+            console.log("🟢 Conectado al servidor Socket.io:", socket.id);
         });
 
-        socket.current.on("connect", () => {
-            console.log("Conectado al servidor Socket.io:", socket.current.id);
-        });
-
-        socket.current.on("receiveMessage", (data) => {
-            console.log("Mensaje recibido:", data);
-            if (selectedChat) {
-                setSelectedChat((prev) => ({
+        socket.on("receiveMessage", (data) => {
+            console.log("📩 Mensaje recibido:", data);
+            setSelectedChat((prev) => {
+                if (!prev) return prev;
+                return {
                     ...prev,
-                    mensajes: [...(prev?.mensajes || []), { texto: data.texto, tipo: "received" }],
-                }));
-            }
+                    mensajes: [...(prev.mensajes || []), { texto: data.texto, tipo: "received" }],
+                };
+            });
         });
+
         return () => {
-            socket.current.disconnect();
+            socket.off("connect");
+            socket.off("receiveMessage");
         };
-    }, [selectedChat]);
+    }, []);
 
 
 
@@ -83,7 +80,7 @@ function PantallaChats() {
         if (!newMessage.trim() || !selectedChat) return;
 
         const mensaje = { texto: newMessage };
-        socket.current.emit("sendMessage", mensaje);
+        socket.emit("sendMessage", mensaje);
 
         setSelectedChat((prev) => ({
             ...prev,
