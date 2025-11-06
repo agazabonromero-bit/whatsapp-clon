@@ -23,13 +23,16 @@ function PantallaChats() {
 
     useEffect(() => {
         socket.on("connect", () => {
-            console.log("🟢 Conectado al servidor Socket.io:", socket.id);
+            console.log("Conectado al servidor Socket.io:", socket.id);
         });
 
         socket.on("receiveMessage", (data) => {
-            console.log("📩 Mensaje recibido:", data);
+            console.log("Mensaje recibido:", data);
+
             setSelectedChat((prev) => {
+
                 if (!prev) return prev;
+
                 return {
                     ...prev,
                     mensajes: [...(prev.mensajes || []), { texto: data.texto, tipo: "received" }],
@@ -79,8 +82,13 @@ function PantallaChats() {
     const handleSendMessage = () => {
         if (!newMessage.trim() || !selectedChat) return;
 
-        const mensaje = { texto: newMessage };
-        socket.emit("sendMessage", mensaje);
+        const mensaje = {
+            texto: newMessage,
+            from: "Laura Gomez",
+            to: selectedChat.CarlosPérez,
+        };
+
+        socket.emit("sendMessage", { texto: newMessage});
 
         setSelectedChat((prev) => ({
             ...prev,
