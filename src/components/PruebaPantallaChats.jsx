@@ -39,7 +39,7 @@ function PantallaChats() {
             console.log("✅ Conectado al servidor Socket.io:", socket.id);
         });
 
-        socket.on("receiveMessage", (data) => {
+        socket.on("mensaje_recibido", (data) => {
             console.log("📩 Mensaje recibido:", data);
 
             if (data.from === usuarioActual.nombre) return;
@@ -333,4 +333,4 @@ function PantallaChats() {
     );
 }
 
-export default PantallaChats;
+export default PantallaChats;   
