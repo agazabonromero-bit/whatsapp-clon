@@ -18,32 +18,31 @@ function PantallaChats() {
     const [selectedChat, setSelectedChat] = useState(null);
     const [newMessage, setNewMessage] = useState("");
     const [activeSection, setActiveSection] = useState("chats");
-    const usuarioActual = {
-        nombre: localStorage.getItem("usuarioActual") || "Invitado",
-    };
+    const storedUser = localStorage.getItem("usuario");
+    const usuarioActual = storedUser
+        ? JSON.parse(storedUser)
+        : { nombre: "Invitado" };
 
 
     useEffect(() => {
-        if (!usuarioActual || usuarioActual.nombre === "Invitado") {
+
+        if (!usuarioActual?.nombre || usuarioActual.nombre === "Invitado") {
             console.warn("⚠️ No hay usuario actual definido");
             return;
         }
 
 
         socket.emit("join", usuarioActual.nombre);
-        console.log(`🟢 ${usuarioActual.nombre} unido al socket`);
+        console.log(`🟢 Usuario unido al socket: ${usuarioActual.nombre}`);
 
         socket.on("connect", () => {
             console.log("✅ Conectado al servidor Socket.io:", socket.id);
         });
 
-
         socket.on("receiveMessage", (data) => {
             console.log("📩 Mensaje recibido:", data);
 
-
             if (data.from === usuarioActual.nombre) return;
-
 
             setChats((prevChats) =>
                 prevChats.map((chat) =>
@@ -58,7 +57,6 @@ function PantallaChats() {
                         : chat
                 )
             );
-
 
             setSelectedChat((prev) =>
                 prev && prev.nombre === data.from
@@ -77,7 +75,8 @@ function PantallaChats() {
             socket.off("connect");
             socket.off("receiveMessage");
         };
-    }, [usuarioActual]);
+
+    }, [usuarioActual.nombre]);
 
 
     useEffect(() => {

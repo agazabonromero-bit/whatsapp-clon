@@ -6,6 +6,7 @@ import PantallaLogTel from './components/PantallaLogTel'
 import PantallaCargando from './components/PantallaCargando'
 import PruebaPantallaChats from './components/PruebaPantallaChats'
 import PantallaCodigoTel from './components/PantallaCodigoTel';
+import SeleccionUsuario from './components/SeleccionUsuario';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path='/' element={<PantallaLogueo />} />
           <Route path='/phone' element={<PantallaLogTel/>}/>
+          <Route path="/seleccion" element={<SeleccionUsuario />} />
           <Route path="/chats" element={<PruebaPantallaChats />} />
           <Route path='/loading' element={<PantallaCargando/>}/>
           <Route path='/code' element={<PantallaCodigoTel/>}/>
