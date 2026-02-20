@@ -5,13 +5,23 @@ import whatsappgray from "../assets/whatsapp-gray.png"
 
 function PantallaCargando() {
     const navigate = useNavigate();
+
     useEffect(() => {
+        const usuario = localStorage.getItem("usuarioActual");
+
+        // 🔒 Si no hay usuario, vuelve a selección
+        if (!usuario) {
+            navigate("/seleccion");
+            return;
+        }
+
         const t = setTimeout(() => {
             navigate("/chats");
-        }, 3500); // 
+        }, 2500);
 
-        return () => clearTimeout(t); 
+        return () => clearTimeout(t);
     }, [navigate]);
+
     return (
         <div className="pantalla-carga">
             <div className="carga-contenido">

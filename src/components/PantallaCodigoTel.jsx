@@ -43,15 +43,21 @@ function PantallaCodigoTel() {
 
   
   const handleVerificar = (codigoIngresado) => {
-    if (codigoIngresado === codigoGuardado) {
-      setLoading(true);
-      setTimeout(() => navigate("/loading"), 1000);
-    } else {
-      alert("❌ Código incorrecto. Inténtalo de nuevo.");
-      setInputs(Array(8).fill(""));
-      document.getElementById("input-0").focus();
-    }
-  };
+  if (codigoIngresado === codigoGuardado) {
+    setLoading(true);
+
+    // opcional: marcar sesión válida
+    localStorage.setItem("codigoValidado", "true");
+
+    setTimeout(() => {
+      navigate("/seleccion");
+    }, 800);
+  } else {
+    alert("❌ Código incorrecto. Inténtalo de nuevo.");
+    setInputs(Array(8).fill(""));
+    document.getElementById("input-0").focus();
+  }
+};
 
     return (
         <div>

@@ -1,39 +1,49 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import "./SeleccionUsuario.css";
 
 function SeleccionUsuario() {
+
+    const navigate = useNavigate();
+
     const usuarios = [
-        { nombre: "Laura Gómez", id: "123", avatar: "https://randomuser.me/api/portraits/women/65.jpg"},
-        { nombre: "Carlos Pérez", id: "456", avatar: "https://randomuser.me/api/portraits/men/42.jpg"},
+        {
+            nombre: "Laura Gómez",
+            id: "123",
+            avatar: "https://randomuser.me/api/portraits/women/65.jpg",
+        },
+        {
+            nombre: "Carlos Pérez",
+            id: "456",
+            avatar: "https://randomuser.me/api/portraits/men/42.jpg",
+        },
     ];
 
-    const seleccionarUsuario = (nombre) => {
-        const usuario = usuarios.find((u) => u.nombre === nombre);
-
-        if (usuario) {
-            localStorage.setItem("usuarioActual", JSON.stringify(usuario));
-            window.location.reload(); 
-        }
+    const seleccionarUsuario = (usuario) => {
+        localStorage.setItem("usuarioActual", JSON.stringify(usuario));        
+        navigate("/loading");
     };
 
     return (
-        <div style={{ padding: 30 }}>
-            <h2>Selecciona un usuario</h2>
-            {usuarios.map((u) => (
-                <button
-                    key={u.id}
-                    onClick={() => seleccionarUsuario(u.nombre)}
-                    style={{
-                        display: "block",
-                        margin: "10px 0",
-                        padding: "10px",
-                        fontSize: "16px",
-                    }}
-                >
-                    Entrar como {u.nombre}
-                </button>
-            ))}
+        <div className="select-user-container">
+            <div className="select-user-card">
+                <h2>Selecciona un Usuario</h2>
+
+                <div className="user-list">
+                    {usuarios.map((u) => (
+                        <button
+                            key={u.id}
+                            className="user-item"
+                            onClick={() => seleccionarUsuario(u)}
+                        >
+                            <img src={u.avatar} alt={u.nombre} />
+                            <span>{u.nombre}</span>
+                        </button>
+                    ))}
+                </div>
+            </div>
         </div>
     );
 }
+
 export default SeleccionUsuario;

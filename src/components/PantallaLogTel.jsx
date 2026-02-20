@@ -41,7 +41,7 @@ function PantallaLogTel() {
 
         const codigo = generarCodigo();
 
-        // Guardar en localStorage
+        
         localStorage.setItem("telefono", telefonoCompleto);
         localStorage.setItem("codigoTemporal", codigo);
 
