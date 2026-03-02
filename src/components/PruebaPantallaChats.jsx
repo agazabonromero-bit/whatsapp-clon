@@ -18,18 +18,13 @@ function PantallaChats() {
     const [selectedChat, setSelectedChat] = useState(null);
     const [newMessage, setNewMessage] = useState("");
     const [activeSection, setActiveSection] = useState("chats");
-    const storedUser = localStorage.getItem("usuario");
-    const usuarioActual = storedUser
-        ? JSON.parse(storedUser)
-        : { nombre: "Invitado" };
+    const storedUser = localStorage.getItem("usuarioActual");
+    const usuarioActual = storedUser ? JSON.parse(storedUser) : null;
 
 
     useEffect(() => {
 
-        if (!usuarioActual?.nombre || usuarioActual.nombre === "Invitado") {
-            console.warn("⚠️ No hay usuario actual definido");
-            return;
-        }
+        if (!usuarioActual?.nombre) return;
 
 
         socket.emit("join", usuarioActual.nombre);
@@ -39,7 +34,7 @@ function PantallaChats() {
             console.log("✅ Conectado al servidor Socket.io:", socket.id);
         });
 
-        socket.on("mensaje_recibido", (data) => {
+        socket.on("receiveMessage", (data) => {
             console.log("📩 Mensaje recibido:", data);
 
             if (data.from === usuarioActual.nombre) return;

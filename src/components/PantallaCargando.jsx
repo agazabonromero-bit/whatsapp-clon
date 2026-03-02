@@ -9,7 +9,7 @@ function PantallaCargando() {
     useEffect(() => {
         const usuario = localStorage.getItem("usuarioActual");
 
-        // 🔒 Si no hay usuario, vuelve a selección
+        
         if (!usuario) {
             navigate("/seleccion");
             return;

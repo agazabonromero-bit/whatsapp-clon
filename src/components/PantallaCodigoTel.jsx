@@ -46,7 +46,7 @@ function PantallaCodigoTel() {
   if (codigoIngresado === codigoGuardado) {
     setLoading(true);
 
-    // opcional: marcar sesión válida
+    
     localStorage.setItem("codigoValidado", "true");
 
     setTimeout(() => {
