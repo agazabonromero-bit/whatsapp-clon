@@ -101,15 +101,8 @@ function PantallaChats() {
         setSelectedChat((prev) => ({
             ...prev,
             mensajes: [...(prev?.mensajes || []), { ...mensaje, tipo: "sent" }],
-        }));
-
-
+        }));     
         
-        if (error) {
-            console.error("Error al guardar mensaje en Supabase:", error);
-        } else {
-            console.log(" Mensaje guardado en Supabase:", mensaje);
-        }
 
         setNewMessage("");
     };
