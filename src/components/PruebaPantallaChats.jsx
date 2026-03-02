@@ -21,57 +21,43 @@ function PantallaChats() {
     const storedUser = localStorage.getItem("usuarioActual");
     const usuarioActual = storedUser ? JSON.parse(storedUser) : null;
 
-
     useEffect(() => {
+    if (!usuarioActual?.nombre) return;
 
-        if (!usuarioActual?.nombre) return;
-
-
+    const handleConnect = () => {
+        console.log("✅ Conectado:", socket.id);
         socket.emit("join", usuarioActual.nombre);
-        console.log(`🟢 Usuario unido al socket: ${usuarioActual.nombre}`);
+        console.log("🟢 Usuario unido:", usuarioActual.nombre);
+    };
 
-        socket.on("connect", () => {
-            console.log("✅ Conectado al servidor Socket.io:", socket.id);
-        });
+    socket.on("connect", handleConnect);
 
-        socket.on("receiveMessage", (data) => {
-            console.log("📩 Mensaje recibido:", data);
+    socket.on("receiveMessage", (data) => {
+        console.log("📩 Mensaje recibido:", data);
 
-            if (data.from === usuarioActual.nombre) return;
+        if (data.from === usuarioActual.nombre) return;
 
-            setChats((prevChats) =>
-                prevChats.map((chat) =>
-                    chat.nombre === data.from
-                        ? {
-                            ...chat,
-                            mensajes: [
-                                ...(chat.mensajes || []),
-                                { texto: data.texto, tipo: "received" },
-                            ],
-                        }
-                        : chat
-                )
-            );
-
-            setSelectedChat((prev) =>
-                prev && prev.nombre === data.from
+        setChats((prevChats) =>
+            prevChats.map((chat) =>
+                chat.nombre === data.from
                     ? {
-                        ...prev,
+                        ...chat,
                         mensajes: [
-                            ...(prev.mensajes || []),
+                            ...(chat.mensajes || []),
                             { texto: data.texto, tipo: "received" },
                         ],
                     }
-                    : prev
-            );
-        });
+                    : chat
+            )
+        );
+    });
 
-        return () => {
-            socket.off("connect");
-            socket.off("receiveMessage");
-        };
-
-    }, [usuarioActual.nombre]);
+    return () => {
+        socket.off("connect", handleConnect);
+        socket.off("receiveMessage");
+    };
+}, [usuarioActual?.nombre]);
+    
 
 
     useEffect(() => {
@@ -118,7 +104,7 @@ function PantallaChats() {
         }));
 
 
-        const { error } = await supabase.from("mensajes").insert([mensaje]);
+        
         if (error) {
             console.error("Error al guardar mensaje en Supabase:", error);
         } else {
