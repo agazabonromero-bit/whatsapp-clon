@@ -32,23 +32,35 @@ function PantallaChats() {
 
     socket.on("connect", handleConnect);
 
-    socket.on("receiveMessage", (data) => {
-        console.log("📩 Mensaje recibido:", data);
+    socket.on("receiveMessage", (mensaje) => {
+        console.log("📩 Mensaje recibido:", mensaje);
 
-        if (data.from === usuarioActual.nombre) return;
-
+        // 🔹 Actualiza la lista general de chats
         setChats((prevChats) =>
             prevChats.map((chat) =>
-                chat.nombre === data.from
+                chat.nombre === mensaje.from
                     ? {
                         ...chat,
                         mensajes: [
                             ...(chat.mensajes || []),
-                            { texto: data.texto, tipo: "received" },
+                            { ...mensaje, tipo: "received" },
                         ],
                     }
                     : chat
             )
+        );
+
+        // 🔹 Actualiza el chat abierto si coincide
+        setSelectedChat((prev) =>
+            prev && prev.nombre === mensaje.from
+                ? {
+                    ...prev,
+                    mensajes: [
+                        ...(prev.mensajes || []),
+                        { ...mensaje, tipo: "received" },
+                    ],
+                }
+                : prev
         );
     });
 
@@ -57,14 +69,11 @@ function PantallaChats() {
         socket.off("receiveMessage");
     };
 }, [usuarioActual?.nombre]);
-    
 
 
     useEffect(() => {
         if (activeSection === "chats") {
-            fetch(
-                "https://68e32f1e8e14f4523dacb062.mockapi.io/whatsapp/api/chats"
-            )
+            fetch("https://68e32f1e8e14f4523dacb062.mockapi.io/whatsapp/api/chats")
                 .then((res) => res.json())
                 .then((data) => {
                     const sanitized = data.map((chat) => ({
@@ -78,35 +87,47 @@ function PantallaChats() {
     }, [activeSection]);
 
 
-    const handleSendMessage = async () => {
-        if (!newMessage.trim() || !selectedChat) return;
+    const handleSendMessage = () => {
+    if (!newMessage.trim() || !selectedChat) return;
 
-        const mensaje = {
-            texto: newMessage,
-            from: usuarioActual.nombre,
-            to: selectedChat?.nombre,
-            fecha: new Date().toISOString(),
-        };
-
-
-        socket.emit("sendMessage", {
-            texto: newMessage,
-            from: usuarioActual.nombre,
-            to: selectedChat.nombre,
-            fecha: new Date().toISOString(),
-        });
-        console.log(" Enviado por socket:", mensaje);
-
-
-        setSelectedChat((prev) => ({
-            ...prev,
-            mensajes: [...(prev?.mensajes || []), { ...mensaje, tipo: "sent" }],
-        }));     
-        
-
-        setNewMessage("");
+    const mensaje = {
+        texto: newMessage,
+        from: usuarioActual.nombre,
+        to: selectedChat.nombre,
+        fecha: new Date().toISOString(),
     };
 
+    socket.emit("sendMessage", mensaje);
+    console.log("📤 Enviado por socket:", mensaje);
+
+    const nuevoMensaje = {
+        texto: newMessage,
+        tipo: "sent",
+    };
+
+    // Actualizar chat abierto inmediatamente
+    setSelectedChat((prev) => ({
+        ...prev,
+        mensajes: [...(prev?.mensajes || []), nuevoMensaje],
+    }));
+
+    // Actualizar también lista de chats
+    setChats((prevChats) =>
+        prevChats.map((chat) =>
+            chat.nombre === selectedChat.nombre
+                ? {
+                    ...chat,
+                    mensajes: [
+                        ...(chat.mensajes || []),
+                        nuevoMensaje,
+                    ],
+                }
+                : chat
+        )
+    );
+
+    setNewMessage("");
+};      
 
     const filteredChats = chats.filter((chat) => {
         if (filter === "no_leidos" && Number(chat.unread || 0) <= 0) return false;
