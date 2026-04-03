@@ -22,53 +22,50 @@ function PantallaChats() {
     const usuarioActual = storedUser ? JSON.parse(storedUser) : null;
 
     useEffect(() => {
-    if (!usuarioActual?.nombre) return;
+        if (!usuarioActual?.nombre) return;
 
-    const handleConnect = () => {
-        console.log("✅ Conectado:", socket.id);
-        socket.emit("join", usuarioActual.nombre);
-        console.log("🟢 Usuario unido:", usuarioActual.nombre);
-    };
+        const handleConnect = () => {
+            socket.emit("join", usuarioActual.nombre);
+        };
 
-    socket.on("connect", handleConnect);
+        socket.on("connect", handleConnect);
 
-    socket.on("receiveMessage", (mensaje) => {
-        console.log("📩 Mensaje recibido:", mensaje);
+        socket.on("receiveMessage", (mensaje) => {
+            console.log("📩 Mensaje recibido:", mensaje);
 
-        // 🔹 Actualiza la lista general de chats
-        setChats((prevChats) =>
-            prevChats.map((chat) =>
-                chat.nombre === mensaje.from
-                    ? {
-                        ...chat,
-                        mensajes: [
-                            ...(chat.mensajes || []),
-                            { ...mensaje, tipo: "received" },
-                        ],
+
+            setChats((prevChats) =>
+                prevChats.map((chat) => {
+                    if (chat.nombre === mensaje.from) {
+                        return {
+                            ...chat,
+                            mensajes: [
+                                ...(chat.mensajes || []),
+                                { ...mensaje, tipo: "received" },
+                            ],
+                        };
                     }
-                    : chat
-            )
-        );
+                    return chat;
+                })
+            );
 
-        // 🔹 Actualiza el chat abierto si coincide
-        setSelectedChat((prev) =>
-            prev && prev.nombre === mensaje.from
-                ? {
+
+            if (selectedChat?.nombre === mensaje.from) {
+                setSelectedChat((prev) => ({
                     ...prev,
                     mensajes: [
-                        ...(prev.mensajes || []),
+                        ...(prev?.mensajes || []),
                         { ...mensaje, tipo: "received" },
                     ],
-                }
-                : prev
-        );
-    });
+                }));
+            }
+        });
 
-    return () => {
-        socket.off("connect", handleConnect);
-        socket.off("receiveMessage");
-    };
-}, [usuarioActual?.nombre]);
+        return () => {
+            socket.off("connect", handleConnect);
+            socket.off("receiveMessage");
+        };
+    }, [usuarioActual?.nombre, selectedChat]);
 
 
     useEffect(() => {
@@ -88,46 +85,43 @@ function PantallaChats() {
 
 
     const handleSendMessage = () => {
-    if (!newMessage.trim() || !selectedChat) return;
+        if (!newMessage.trim() || !selectedChat) return;
 
-    const mensaje = {
-        texto: newMessage,
-        from: usuarioActual.nombre,
-        to: selectedChat.nombre,
-        fecha: new Date().toISOString(),
+        const mensaje = {
+            texto: newMessage,
+            from: usuarioActual.nombre,
+            to: selectedChat.nombre,
+            fecha: new Date().toISOString(),
+        };
+
+        socket.emit("sendMessage", mensaje);
+
+
+        setChats((prevChats) =>
+            prevChats.map((chat) =>
+                chat.nombre === selectedChat.nombre
+                    ? {
+                        ...chat,
+                        mensajes: [
+                            ...(chat.mensajes || []),
+                            { ...mensaje, tipo: "sent" },
+                        ],
+                    }
+                    : chat
+            )
+        );
+
+
+        setSelectedChat((prev) => ({
+            ...prev,
+            mensajes: [
+                ...(prev?.mensajes || []),
+                { ...mensaje, tipo: "sent" },
+            ],
+        }));
+
+        setNewMessage("");
     };
-
-    socket.emit("sendMessage", mensaje);
-    console.log("📤 Enviado por socket:", mensaje);
-
-    const nuevoMensaje = {
-        texto: newMessage,
-        tipo: "sent",
-    };
-
-    // Actualizar chat abierto inmediatamente
-    setSelectedChat((prev) => ({
-        ...prev,
-        mensajes: [...(prev?.mensajes || []), nuevoMensaje],
-    }));
-
-    // Actualizar también lista de chats
-    setChats((prevChats) =>
-        prevChats.map((chat) =>
-            chat.nombre === selectedChat.nombre
-                ? {
-                    ...chat,
-                    mensajes: [
-                        ...(chat.mensajes || []),
-                        nuevoMensaje,
-                    ],
-                }
-                : chat
-        )
-    );
-
-    setNewMessage("");
-};      
 
     const filteredChats = chats.filter((chat) => {
         if (filter === "no_leidos" && Number(chat.unread || 0) <= 0) return false;
