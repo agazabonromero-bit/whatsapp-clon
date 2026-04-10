@@ -38,12 +38,13 @@ function PantallaChats() {
             console.log("🔴 DESCONECTADO");
         });
 
-        console.log("📨 RECIBIDO PARA:", usuarioActual.nombre);
-        console.log("📩 MENSAJE COMPLETO:", mensaje);
+
 
 
         socket.on("receiveMessage", (mensaje) => {
             console.log("📩 Mensaje recibido:", mensaje);
+            console.log("📨 RECIBIDO PARA:", usuarioActual.nombre);
+            console.log("📩 MENSAJE COMPLETO:", mensaje);
 
 
             setChats((prevChats) =>
