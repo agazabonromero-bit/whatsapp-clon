@@ -7,7 +7,8 @@ const URL =
   "https://whatsapp-cloner-backend.onrender.com";
 
 export const socket = io(URL, {
-  transports: ["websocket", "polling"],
+  transports: ["polling", "websocket"],
+  secure: true,
   withCredentials: true,
 });
 

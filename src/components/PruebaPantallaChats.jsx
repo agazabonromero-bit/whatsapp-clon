@@ -20,33 +20,40 @@ function PantallaChats() {
     const [activeSection, setActiveSection] = useState("chats");
     const storedUser = localStorage.getItem("usuarioActual");
     const usuarioActual = storedUser ? JSON.parse(storedUser) : null;
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
     useEffect(() => {
         if (!usuarioActual?.nombre) return;
 
-        const handleConnect = () => {
-            socket.emit("join", usuarioActual.nombre);
-        };
 
-        socket.on("connect", handleConnect);
+        socket.on("connect", () => {
+            console.log("🟢 CONECTADO A SOCKET:", socket.id);
+            socket.emit("join", usuarioActual.nombre);
+            console.log("👤 Join enviado:", usuarioActual.nombre);
+        });
+
+
+        socket.on("disconnect", () => {
+            console.log("🔴 DESCONECTADO");
+        });
+
 
         socket.on("receiveMessage", (mensaje) => {
             console.log("📩 Mensaje recibido:", mensaje);
 
 
             setChats((prevChats) =>
-                prevChats.map((chat) => {
-                    if (chat.nombre === mensaje.from) {
-                        return {
+                prevChats.map((chat) =>
+                    chat.nombre === mensaje.from
+                        ? {
                             ...chat,
                             mensajes: [
                                 ...(chat.mensajes || []),
                                 { ...mensaje, tipo: "received" },
                             ],
-                        };
-                    }
-                    return chat;
-                })
+                        }
+                        : chat
+                )
             );
 
 
@@ -61,10 +68,13 @@ function PantallaChats() {
             }
         });
 
+
         return () => {
-            socket.off("connect", handleConnect);
+            socket.off("connect");
+            socket.off("disconnect");
             socket.off("receiveMessage");
         };
+
     }, [usuarioActual?.nombre, selectedChat]);
 
 
@@ -82,6 +92,18 @@ function PantallaChats() {
                 .catch((err) => console.error("Error cargando chats:", err));
         }
     }, [activeSection]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 768);
+        };
+
+        window.addEventListener("resize", handleResize);
+
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
 
     const handleSendMessage = () => {
