@@ -25,6 +25,7 @@ function PantallaChats() {
     useEffect(() => {
         if (!usuarioActual?.nombre) return;
 
+        console.log("👤 USUARIO ACTUAL:", usuarioActual.nombre);
 
         socket.on("connect", () => {
             console.log("🟢 CONECTADO A SOCKET:", socket.id);
@@ -36,6 +37,9 @@ function PantallaChats() {
         socket.on("disconnect", () => {
             console.log("🔴 DESCONECTADO");
         });
+
+        console.log("📨 RECIBIDO PARA:", usuarioActual.nombre);
+        console.log("📩 MENSAJE COMPLETO:", mensaje);
 
 
         socket.on("receiveMessage", (mensaje) => {
@@ -115,6 +119,9 @@ function PantallaChats() {
             to: selectedChat.nombre,
             fecha: new Date().toISOString(),
         };
+
+        console.log("📤 ENVIANDO DE:", usuarioActual.nombre);
+        console.log("📥 ENVIANDO A:", selectedChat.nombre);
 
         socket.emit("sendMessage", mensaje);
 
